@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import { TailSpin } from "react-loader-spinner";
 
 function App() {
   const [name, setName] = useState("eevee");
   const [data, setData] = useState([]);
   const [err, setErr] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  console.log(name);
 
   async function getPokemon() {
     setIsLoading(true);
     try {
+      setErr(false);
       let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       let pokemonData = await res.json();
       setData(pokemonData);
@@ -25,15 +28,13 @@ function App() {
     console.log(data);
   }, []);
 
-  console.log(name);
-
   function handleSubmit(e) {
     e.preventDefault();
     getPokemon();
   }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-indigo-500 to indigo-800">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-indigo-500 to-indigo-800">
       <div className="bg-white text-center rounded-3xl border shadow-lg p-10 max-w-xs">
         <form onSubmit={handleSubmit}>
           <input
@@ -41,18 +42,30 @@ function App() {
             value={name}
             type="text"
             className="p-3 border-solid border-2 border-indigo-600 rounded-md"
-            placeholder="Search by Name"
+            placeholder="Search by name"
           />
           <button className="bg-indigo-600 px-2 mt-5 text-lg rounded text-gray-100">
             Search
           </button>
         </form>
+
         {err ? (
           <p className="my-5">No data was found!</p>
         ) : (
           <>
             {isLoading ? (
-              <p className="my-5">Loading...</p>
+              <div className="flex items-center justify-center">
+                <TailSpin
+                  height="80"
+                  width="80"
+                  color="#4fa94d"
+                  ariaLabel="tail-spin-loading"
+                  radius="1"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                />
+              </div>
             ) : (
               <>
                 <img
@@ -70,4 +83,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
